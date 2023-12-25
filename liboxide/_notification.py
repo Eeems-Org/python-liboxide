@@ -37,14 +37,23 @@ class NotificationAPI(API):
     @classproperty
     def notifications(cls):
         res = rot(*cls.rotArgs, "get", "notifications")
+        if res is None:
+            return []
+
         return [Notification(x) for x in res]
 
     @classproperty
     def allNotifications(cls):
         res = rot(*cls.rotArgs, "get", "allNotifications")
+        if res is None:
+            return []
+
         return [Notification(x) for x in res]
 
     @classproperty
     def unownedNotifications(cls):
         res = rot(*cls.rotArgs, "get", "unownedNotifications")
+        if res is None:
+            return []
+
         return [Notification(x) for x in res]

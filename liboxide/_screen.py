@@ -30,4 +30,7 @@ class ScreenAPI(API):
     @classproperty
     def screenshots(cls):
         res = rot(*cls.rotArgs, "get", "screenshots")
+        if res is None:
+            return []
+
         return [Screenshot(x) for x in res]

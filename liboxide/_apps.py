@@ -7,6 +7,7 @@ from ._util import static_init
 
 class Application(APIObject):
     api = "apps"
+    folder = "apps"
     properties = [
         "name",
         "processId",
@@ -69,6 +70,9 @@ class AppsAPI(API):
     @classproperty
     def applications(cls):
         res = rot(*cls.rotArgs, "get", "applications")
+        if res is None:
+            return {}
+
         for name, path in res.items():
             res[name] = Application(path)
 

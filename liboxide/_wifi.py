@@ -23,6 +23,9 @@ class Network(APIObject):
     @property
     def bSSs(self):
         res = rot(*self.rotArgs, "get", "bSSs")
+        if res is None:
+            return []
+
         return [BSS(x) for x in res]
 
 
@@ -62,6 +65,7 @@ class WifiAPI(API):
     ]
     methods = [
         ("enable", None),
+        ("disable", None),
         ("addNetwork", Network, str, dict[str, object]),
         ("getNetwork", Network, dict[str, object]),
         ("getBSS", BSS, dict[str, object]),
@@ -78,6 +82,9 @@ class WifiAPI(API):
     @classproperty
     def bSSs(cls):
         res = rot(*cls.rotArgs, "get", "bSSs")
+        if res is None:
+            return []
+
         return [BSS(x) for x in res]
 
     @classproperty
@@ -91,4 +98,7 @@ class WifiAPI(API):
     @classproperty
     def networks(cls):
         res = rot(*cls.rotArgs, "get", "networks")
+        if res is None:
+            return []
+
         return [Network(x) for x in res]

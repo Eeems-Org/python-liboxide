@@ -23,12 +23,16 @@ class API:
 
 class APIObject:
     api = None
+    folder = None
     properties = []
     methods = []
 
     def __init__(self, path):
-        if not path.startswith(f"/codes/eeems/oxide1/{self.api}"):
-            raise ValueError()
+        if self.__class__.folder is None:
+            self.__class__.folder = self.__class__.__name__.lower()
+
+        if not path.startswith(f"/codes/eeems/oxide1/{self.folder}"):
+            raise ValueError(f"Invalid path for {self.__class__.__name__}: {path}")
 
         self._path = path
         self.rotArgs = [
