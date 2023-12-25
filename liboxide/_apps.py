@@ -1,8 +1,8 @@
 from ._base import API
 from ._base import APIObject
-from ._base import classproperty
-from ._base import rot
-from ._base import static_init
+from ._util import classproperty
+from ._util import rot
+from ._util import static_init
 
 
 class Application(APIObject):
@@ -41,7 +41,7 @@ class Application(APIObject):
 
 
 @static_init
-class Apps(API):
+class AppsAPI(API):
     properties = [
         "startupApplication",
         "lockscreenApplication",

@@ -1,0 +1,33 @@
+from ._base import API
+from ._base import APIObject
+from ._util import classproperty
+from ._util import rot
+from ._util import static_init
+
+
+class Screenshot(APIObject):
+    api = "screen"
+    properties = [
+        "blob",
+        "path",
+    ]
+    methods = [
+        ("remove", None),
+    ]
+
+
+@static_init
+class ScreenAPI(API):
+    properties = [
+        "screenshots",
+    ]
+    methods = [
+        ("addScreenshot", Screenshot, str),
+        ("drawFullScreenImage", Screenshot, str),
+        ("screenshot", Screenshot),
+    ]
+
+    @classproperty
+    def screenshots(cls):
+        res = rot(*cls.rotArgs, "get", "screenshots")
+        return [Screenshot(x) for x in res]
