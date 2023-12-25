@@ -24,10 +24,11 @@ jobs:
         run: pip install build
       - name: Building toltecmk
         run: python -m build --sdist
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: pip
           path: dist/*
+          if-no-files-found: error
   publish:
     name: Publish to PyPi
     runs-on: ubuntu-latest
