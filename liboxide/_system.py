@@ -19,3 +19,14 @@ class SystemAPI(API):
         ("inhibitPowerOff", None),
         ("uninhibitPowerOff", None),
     ]
+    signals = [
+        ("leftAction",),
+        ("homeAction",),
+        ("rightAction",),
+        ("powerAction",),
+        ("sleepInhibitedChanged", bool),
+        ("powerOffInhibitedChanged", bool),
+        ("autoSleepChanged", bool),
+        ("deviceSuspending",),
+        ("deviceResuming",),
+    ]

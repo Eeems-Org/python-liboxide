@@ -39,6 +39,23 @@ class Application(APIObject):
         ("unregister", None),
         ("setEnvironment", None, dict[str, object]),
     ]
+    signals = [
+        ("launched",),
+        ("paused",),
+        ("resumed",),
+        ("unregistered",),
+        ("exited", int),
+        ("permissionsChanged", list[str]),
+        ("displayNameChanged", str),
+        ("onPauseChanged", str),
+        ("onResumeChanged", str),
+        ("onStopChanged", str),
+        ("autoStartChanged", bool),
+        ("iconChanged", str),
+        ("environmentChanged", list[str]),
+        ("workingDirectoryChanged", str),
+        ("directoriesChanged", str),
+    ]
 
 
 @static_init
@@ -61,6 +78,14 @@ class AppsAPI(API):
         ("reload", None),
         ("getApplicationPath", str, str),
         ("previousApplication", Application),
+    ]
+    signals = [
+        ("applicationRegistered", Application),
+        ("applicationLaunched", Application),
+        ("applicationUnregistered", Application),
+        ("applicationPaused", Application),
+        ("applicationResumed", Application),
+        ("applicationExited", Application, int),
     ]
 
     @classmethod

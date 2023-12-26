@@ -4,6 +4,8 @@ import sys
 
 from ._errors import TooFewArguments
 from ._errors import TooManyArguments
+from ._errors import ObjectNotFound
+from ._errors import RotException
 
 
 def static_init(cls):
@@ -24,9 +26,16 @@ class classproperty(object):
 
 
 def rot(*args):
-    stdout = subprocess.check_output(["/opt/bin/rot"] + list(args))
-    if stdout:
-        return json.loads(stdout)
+    try:
+        stdout = subprocess.check_output(["/opt/bin/rot"] + list(args))
+        if stdout:
+            return json.loads(stdout)
+    except subprocess.CalledProcessError as e:
+        stdout = e.output.decode("utf-8")
+        if "org.freedesktop.DBus.Error.UnknownObject" in stdout:
+            raise ObjectNotFound(stdout) from e
+
+        raise RotException(stdout) from e
 
     return None
 
@@ -42,6 +51,21 @@ def _registerProperty(obj, name):
         setattr(obj, name, classproperty(fn))
     else:
         setattr(obj.__class__, name, property(fn))
+
+
+def _convert(_type, val):
+    if _type is None:
+        return None
+
+    from ._base import APIObject
+
+    if issubclass(_type, APIObject):
+        return _type(val)
+
+    if _type in (str, bool, int):
+        return val
+
+    raise NotImplementedError(_type)
 
 
 def _createMethod(cls, name, retType, *signature):
@@ -68,23 +92,11 @@ def _createMethod(cls, name, retType, *signature):
             elif issubclass(argType, dict):
                 qtype = "QVariant"
             else:
-                raise NotImplementedError()
+                raise NotImplementedError(argType)
 
             arguments.append(f"{qtype}:{json.dumps(args[0])}")
 
-        res = rot(*cls.rotArgs, "call", name, *arguments)
-        if retType is None:
-            return None
-
-        from ._base import APIObject
-
-        if issubclass(APIObject, retType):
-            return retType(res)
-
-        if retType in (str, bool, int):
-            return res
-
-        raise NotImplementedError()
+        return _convert(retType, rot(*cls.rotArgs, "call", name, *arguments))
 
     return fn
 
@@ -105,3 +117,18 @@ def _registerMethod(obj, name, retType, *signature):
             name,
             _createMethod(obj, name, retType, *signature),
         )
+
+
+def _listenMethod(obj, name, *signature):
+    if len(signature) > 1:
+        raise NotImplementedError()
+
+    # TODO cache these instead of creating them every time
+    def fn():
+        res = rot(*obj.rotArgs, "--once", "listen", name)
+        if signature:
+            return _convert(signature[0], res)
+
+        return res
+
+    return fn

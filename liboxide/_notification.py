@@ -19,6 +19,12 @@ class Notification(APIObject):
         ("remove", None),
         ("click", None),
     ]
+    signals = [
+        ("changed", dict[str, str]),
+        ("removed",),
+        ("displayed",),
+        ("clicked",),
+    ]
 
 
 @static_init
@@ -32,6 +38,11 @@ class NotificationAPI(API):
         ("add", Notification, str, str, str, str),
         ("take", Notification, bool, str),
         ("get", Notification, str),
+    ]
+    signals = [
+        ("notificationAdded", Notification),
+        ("notificationRemoved", Notification),
+        ("notificationChanged", Notification),
     ]
 
     @classproperty

@@ -14,6 +14,10 @@ class Screenshot(APIObject):
     methods = [
         ("remove", None),
     ]
+    signals = [
+        ("modified",),
+        ("removed",),
+    ]
 
 
 @static_init
@@ -25,6 +29,11 @@ class ScreenAPI(API):
         ("addScreenshot", Screenshot, str),
         ("drawFullScreenImage", Screenshot, str),
         ("screenshot", Screenshot),
+    ]
+    signals = [
+        ("screenshotAdded", Screenshot),
+        ("screenshotRemoved", Screenshot),
+        ("screenshotModified", Screenshot),
     ]
 
     @classproperty

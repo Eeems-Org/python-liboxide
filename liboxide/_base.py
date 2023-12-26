@@ -1,11 +1,25 @@
-from ._util import _registerProperty
+from ._util import _listenMethod
 from ._util import _registerMethod
+from ._util import _registerProperty
+
+
+class SignalHandler:
+    def __init__(self, host):
+        self.__host = host
+
+    def __getattr__(self, name):
+        for _name, *signature in self.__host.signals:
+            if name == _name:
+                return _listenMethod(self.__host, name, *signature)
+
+        raise NotImplementedError(name)
 
 
 class API:
     rotArgs = []
     properties = []
     methods = []
+    signals = []
 
     @staticmethod
     def _raise(e):
@@ -13,6 +27,7 @@ class API:
 
     @classmethod
     def static_init(cls):
+        cls.on = SignalHandler(cls)
         cls.rotArgs = [cls.__name__.lower()[:-3]]
         for name in cls.properties:
             _registerProperty(cls, name)
@@ -26,8 +41,10 @@ class APIObject:
     folder = None
     properties = []
     methods = []
+    signals = []
 
     def __init__(self, path):
+        self.on = SignalHandler(self)
         if self.__class__.folder is None:
             self.__class__.folder = self.__class__.__name__.lower()
 

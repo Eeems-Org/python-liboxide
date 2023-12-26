@@ -11,3 +11,12 @@ class PowerAPI(API):
         "batteryTemperature",
         "chargerState",
     ]
+    signals = [
+        ("stateChanged", int),
+        ("batteryStateChanged", int),
+        ("batteryLevelChanged", int),
+        ("batteryTemperatureChanged", int),
+        ("batteryWarning",),
+        ("batteryAlert",),
+        ("chargerWarning",),
+    ]

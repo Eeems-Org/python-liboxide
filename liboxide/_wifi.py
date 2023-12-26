@@ -19,6 +19,13 @@ class Network(APIObject):
         ("connect", None),
         ("remove", None),
     ]
+    signals = [
+        ("stateChanged", bool),
+        ("propertiesChanged", dict[str, str]),
+        ("connected",),
+        ("disconnected",),
+        ("removed",),
+    ]
 
     @property
     def bSSs(self):
@@ -41,6 +48,10 @@ class BSS(APIObject):
     ]
     methods = [
         ("connect", Network),
+    ]
+    signals = [
+        ("removed",),
+        ("propertiesChanged", dict[str, str]),
     ]
 
     @property
@@ -77,6 +88,17 @@ class WifiAPI(API):
         ("addBlob", None, str, str),
         ("removeBlob", None, str),
         ("getBlob", str, str),
+    ]
+    signals = [
+        ("stateChanged", int),
+        ("linkChanged", int),
+        ("networkAdded", Network),
+        ("networkRemoved", Network),
+        ("networkConnected", Network),
+        ("disconnected",),
+        ("bssFound", BSS),
+        ("bssRemoved", BSS),
+        ("scanningChanged", bool),
     ]
 
     @classproperty
