@@ -22,8 +22,8 @@ jobs:
           cache: 'pip'
       - name: Install build tool
         run: pip install build
-      - name: Building toltecmk
-        run: python -m build --sdist
+      - name: Building package
+        run: python -m build
       - uses: actions/upload-artifact@v4
         with:
           name: pip
