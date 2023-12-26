@@ -1,3 +1,5 @@
+[![liboxide on PyPI](https://img.shields.io/pypi/v/liboxide)](https://pypi.org/project/liboxide)
+
 Python wrapper around the oxide command line tools
 ==================================================
 
