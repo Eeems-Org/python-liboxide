@@ -12,3 +12,9 @@ print("Notifications:")
 for notification in liboxide.notification.allNotifications:
     app = liboxide.apps.getApplication(notification.application)
     print(f"  {notification.identifier} owned by {app.displayName}")
+
+path = liboxide.settings.get("apps", "lockscreenApplication")
+app = liboxide.Application(path)
+print(f"Lockscreen App: {app.displayName}")
+autoLock = liboxide.settings.get("autoLock")
+print(f"Automatic lock: {autoLock} minutes")
