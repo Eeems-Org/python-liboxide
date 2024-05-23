@@ -2,6 +2,8 @@ from ._apps import Application
 from ._apps import AppsAPI as apps
 from ._errors import TooFewArguments
 from ._errors import TooManyArguments
+from ._errors import ObjectNotFound
+from ._errors import RotException
 from ._notification import Notification
 from ._notification import NotificationAPI as notification
 from ._power import PowerAPI as power
