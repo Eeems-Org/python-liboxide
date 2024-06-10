@@ -13,6 +13,10 @@ pip install --force-reinstall /tmp/liboxide-${VERSION}-py3-none-any.whl
 endef
 export SCRIPT
 
+ifeq ($(VENV_BIN_ACTIVATE),)
+VENV_BIN_ACTIVATE := .venv/bin/activate
+endif
+
 dist/liboxide-${VERSION}.tar.gz: $(shell find liboxide -type f)
 	python -m build --sdist
 
@@ -31,4 +35,26 @@ install: deploy
 test: install
 	cat test.py | ssh root@10.11.99.1 /opt/bin/python -u
 
-.PHONY: clean install test deploy
+$(VENV_BIN_ACTIVATE):
+	@echo "Setting up development virtual env in .venv"
+	python -m venv .venv
+	. $(VENV_BIN_ACTIVATE); \
+	python -m pip install ruff
+
+lint: $(VENV_BIN_ACTIVATE)
+	. $(VENV_BIN_ACTIVATE); \
+	python -m ruff check
+
+lint-fix: $(VENV_BIN_ACTIVATE)
+	. $(VENV_BIN_ACTIVATE); \
+	python -m ruff check
+
+format: $(VENV_BIN_ACTIVATE)
+	. $(VENV_BIN_ACTIVATE); \
+	python -m ruff format --diff
+
+format-fix: $(VENV_BIN_ACTIVATE)
+	. $(VENV_BIN_ACTIVATE); \
+	python -m ruff format
+
+.PHONY: clean install test deploy lint lint-fix format format-fix

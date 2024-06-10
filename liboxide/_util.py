@@ -1,6 +1,5 @@
 import subprocess
 import json
-import sys
 
 from ._errors import TooFewArguments
 from ._errors import TooManyArguments

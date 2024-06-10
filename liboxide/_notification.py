@@ -3,7 +3,6 @@ from ._base import APIObject
 from ._util import classproperty
 from ._util import rot
 from ._util import static_init
-from ._apps import AppsAPI
 
 
 class Notification(APIObject):
